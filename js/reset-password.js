@@ -20,7 +20,7 @@ document.getElementById("resetbtn").addEventListener("click", (e) => {
   sendPasswordResetEmail(auth, emailValue)
     .then(() => {
       alert("Password reset email sent! Check your inbox.");
-      window.location.href = "../login/"; // optional redirect
+      window.location.href = "../Checkemail/"; // optional redirect
     })
     .catch((error) => {
       alert(error.message);
