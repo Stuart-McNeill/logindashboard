@@ -1,19 +1,17 @@
 //dashboard.js
 
-import { app } from "./firebase-config.js";
+import { app, db } from "./firebase-config.js";
 import {
   getAuth,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import {
-  getFirestore,
   getDoc,
   doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const auth = getAuth(app);
-const db = getFirestore(app);
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -21,12 +19,20 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // Get user doc
-  const docRef = doc(db, "users", user.uid);
-  const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    const fullname = docSnap.data().fullname;
-    document.getElementById("welcomeText").textContent = `Welcome, ${fullname}!`;
+    if (docSnap.exists()) {
+      document.getElementById("welcomeText").textContent =
+        `Welcome, ${docSnap.data().fullname}!`;
+    } else {
+      // If doc does not exist, fallback:
+      document.getElementById("welcomeText").textContent =
+        "Welcome User";
+    }
+
+  } catch (err) {
+    alert(err.message); // shows helpful diagnostic
   }
 });
