@@ -1,38 +1,40 @@
 //dashboard.js
 
-import { app, db } from "./firebase-config.js";
+import { app } from "./firebase-config.js";
 import {
   getAuth,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import {
-  getDoc,
-  doc
+  getFirestore,
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const auth = getAuth(app);
+const db = getFirestore(app);
+
+const nameLabel = document.getElementById("namelabel");
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "../login/";
+    window.location.href = "../index.html";
     return;
   }
 
-  try {
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
+  const userRef = doc(db, "users", user.uid);
+  const snapshot = await getDoc(userRef);
 
-    if (docSnap.exists()) {
-      document.getElementById("welcomeText").textContent =
-        `Welcome, ${docSnap.data().fullname}!`;
-    } else {
-      // If doc does not exist, fallback:
-      document.getElementById("welcomeText").textContent =
-        "Welcome User";
-    }
-
-  } catch (err) {
-    alert(err.message); // shows helpful diagnostic
+  if (snapshot.exists()) {
+    const userData = snapshot.data();
+    nameLabel.textContent = userData.fullName;
+  } else {
+    nameLabel.textContent = user.email;
   }
+});
+
+document.getElementById("logoutbtn").addEventListener("click", () => {
+  signOut(auth).then(() => window.location.href = "../index.html");
 });
