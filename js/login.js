@@ -7,13 +7,19 @@ import {
 
 const auth = getAuth(app);
 
-document.getElementById("loginbtn").addEventListener("click", (e) => {
+document.getElementById("loginbtn").addEventListener("click", async (e) => {
   e.preventDefault();
 
   const email = document.getElementById("email").value;
   const pass = document.getElementById("password").value;
 
-  signInWithEmailAndPassword(auth, email, pass)
-    .then(() => window.location.href = "dashboard")
-    .catch((e) => alert(e.message));
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+
+    // 🔥 move immediately to dashboard
+    window.location.href = "dashboard/";
+    
+  } catch (error) {
+    alert(error.message);
+  }
 });
