@@ -1,6 +1,5 @@
 // create.js
 import { app } from "./firebase-config.js";
-
 import { 
   getAuth, 
   createUserWithEmailAndPassword 
@@ -8,8 +7,8 @@ import {
 
 import {
   getFirestore,
-  setDoc,
-  doc
+  doc,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const auth = getAuth(app);
@@ -18,25 +17,22 @@ const db = getFirestore(app);
 document.getElementById("createbtn").addEventListener("click", async (e) => {
   e.preventDefault();
 
+  const fullName = document.getElementById("fullname").value;
   const email = document.getElementById("email").value;
   const pass = document.getElementById("password").value;
-  const fullname = document.getElementById("fullname").value; // 👈 NEW FIELD
 
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-    const user = userCredential.user;
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
 
-    // Save user info in Firestore
-    await setDoc(doc(db, "users", user.uid), {
-      fullname: fullname,
-      email: email,
-      createdAt: new Date()
+    await setDoc(doc(db, "users", cred.user.uid), {
+      fullName,
+      email
     });
 
     alert("Account created!");
-    window.location.href = "../login/";
-    
-  } catch (err) {
-    alert(err.message);
+    window.location.href = "../index.html";
+
+  } catch (error) {
+    alert(error.message);
   }
 });
