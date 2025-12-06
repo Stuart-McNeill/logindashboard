@@ -13,6 +13,6 @@ onAuthStateChanged(auth, (user) => {
   else document.getElementById("userInfo").innerText = "Logged in as " + user.email;
 });
 
-document.getElementById("logoutBtn").addEventListener("click", () => {
+document.getElementById("logoutbtn").addEventListener("click", () => {
   signOut(auth).then(() => window.location.href = "index.html");
 });
