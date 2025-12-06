@@ -10,7 +10,7 @@ const auth = getAuth(app);
 document.getElementById("resetbtn").addEventListener("click", (e) => {
   e.preventDefault();
 
-  const emailValue = document.getElementById("emailReset").value;
+  const emailValue = document.getElementById("emailreset").value;
 
   if (!emailValue) {
     alert("Please enter an email address.");
